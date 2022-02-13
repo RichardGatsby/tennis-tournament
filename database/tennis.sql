@@ -1,6 +1,7 @@
 
+CREATE DATABASE [IF NOT EXISTS] tennis;
+
 BEGIN;
-CREATE DATABASE tennis
 
 CREATE TABLE players (
     player_id SERIAL PRIMARY KEY,
