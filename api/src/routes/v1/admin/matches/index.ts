@@ -9,6 +9,7 @@ const AddMatch = D.Obj({
   player_one_id: D.Num,
   player_two_id: D.Num,
   match_type: D.Str,
+  tournament_id: D.Num
 });
 
 export type AddMatch = GetType<typeof AddMatch>;

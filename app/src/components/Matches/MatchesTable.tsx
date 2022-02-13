@@ -33,7 +33,7 @@ export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
   const [secondScore, setSecondScore] = useState<number | null>(null);
 
   const handleSave = async () => {
-    if (selectedMatch && firstScore && secondScore)
+    if (selectedMatch && firstScore !== null && secondScore !== null)
       await scoreAdded(firstScore, secondScore, selectedMatch);
     handleClose();
   };

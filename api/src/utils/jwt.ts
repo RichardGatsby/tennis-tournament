@@ -3,7 +3,7 @@ import { getConfig } from '../config'
 const config = getConfig()
 
 export const sign = (isAdmin: boolean) => {
-   return jwt.sign({ isAdmin }, config.signingKey, { expiresIn: '5m' })
+   return jwt.sign({ isAdmin }, config.signingKey, { expiresIn: '10h' })
 }
 
 export const verify = (token: string) => {

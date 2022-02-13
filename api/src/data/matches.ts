@@ -22,8 +22,8 @@ export const getMatches = async (): Promise<Match[]> => {
 export const addMatches = async (data: AddMatch[]): Promise<void> => {
   data.forEach(async (match) => {
     await query(
-      "INSERT INTO public.matches (match_type, player_one_id, player_two_id) VALUES ($1, $2, $3)",
-      [match.match_type, match.player_one_id, match.player_two_id]
+      "INSERT INTO public.matches (match_type, player_one_id, player_two_id, tournament_id) VALUES ($1, $2, $3, $4)",
+      [match.match_type, match.player_one_id, match.player_two_id, match.tournament_id]
     );
   });
 };
