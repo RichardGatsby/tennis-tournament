@@ -6,9 +6,10 @@ services:
       - "5432:5432"
     env_file: ./database/.env
     volumes:
-          - ./postgres-data:/var/lib/postgresql/data
          # copy the sql script to create tables
           - ./database/tennis.sql:/docker-entrypoint-initdb.d/tennis.sql
+          - ./postgres-data:/var/lib/postgresql/data
+
 
   tennis-api:
     build:
@@ -23,6 +24,7 @@ services:
     environment:
       NODE_ENV: development
       DEBUG: nodejs-docker-express:*
+      PGHOST: tennis-db
     depends_on: 
       - tennis-db
   

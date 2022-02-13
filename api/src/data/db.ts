@@ -1,12 +1,13 @@
 import pg from "pg";
 
-//TODO: fix this to work with all envs :))
-//This for production
-const pool = new pg.Pool({
-  ssl: {
-    rejectUnauthorized: false,
-  },
-});
+const pool =
+  process.env.NODE_ENV !== "production"
+    ? new pg.Pool()
+    : new pg.Pool({
+        ssl: {
+          rejectUnauthorized: false,
+        },
+      });
 
 //Use this for local development
 //const pool = new pg.Pool()
