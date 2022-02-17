@@ -9,7 +9,6 @@ function App() {
         <img src={tennis} width="400" height="200" />
       </header>
       <Store>
-        <div>Hello</div>
         <Main></Main>
       </Store>
     </div>
