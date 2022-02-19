@@ -74,7 +74,7 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
               onChange={handleChange}
             >
               {players.map((player) => (
-                <MenuItem value={player.player_id}>{player.name}</MenuItem>
+                <MenuItem value={player.player_id} key={player.player_id}>{player.name}</MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -95,8 +95,8 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSavePlayer}>Save</Button>
+          <Button onClick={handleClose} variant="outlined">Cancel</Button>
+          <Button onClick={handleSavePlayer} variant="outlined">Save</Button>
         </DialogActions>
       </Dialog>
     </Container>

@@ -5,6 +5,7 @@ import TextField from "@mui/material/TextField";
 import TabContainer from "./Tabs";
 import { Context } from "../../store";
 import { login } from "../../api/auth";
+import { Box, Card, CardContent } from "@mui/material";
 
 export const Main = () => {
   const { state, dispatch } = useContext(Context);
@@ -30,22 +31,31 @@ export const Main = () => {
       {state.authToken ? (
         <TabContainer></TabContainer>
       ) : (
-        <Container
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            marginLeft: 0,
-            marginRight: 0,
-          }}
-        >
-          Enter password
-          <TextField
-            value={inputValue}
-            onChange={(event) => setInputValue(event.target.value)}
-          ></TextField>
-          <Button onClick={handleLogin}>Login</Button>
-        </Container>
+        <Card sx={{ minWidth: 275 }} variant="outlined">
+          <CardContent
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
+            <Box py={2}>Enter password</Box>
+            <TextField
+              value={inputValue}
+              onChange={(event) => setInputValue(event.target.value.toLowerCase())}
+              onKeyPress={(ev) => {
+                if (ev.key === "Enter") {
+                  handleLogin()
+                }
+              }}
+            ></TextField>
+            <Box py={2}>
+              <Button onClick={handleLogin} variant="outlined">
+                Login
+              </Button>
+            </Box>
+          </CardContent>
+        </Card>
       )}
     </Container>
   );

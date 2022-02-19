@@ -5,7 +5,12 @@ import { Player } from "../../api/playersApi";
 import Button from "@mui/material/Button";
 import { Context } from "../../store";
 
-import { TextField } from "@mui/material";
+import {
+  Card,
+  CardContent,
+  TextField,
+  Typography,
+} from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -46,34 +51,53 @@ export default function AdminActions() {
   };
 
   return (
-    <Box bgcolor={"#D3D3D3"}>
-      <Button onClick={async () => setOpenAddTournament(true)}>
-        Create Tournament
-      </Button>
-      <Button
-        disabled={
-          !state.selectedTournament?.end_dt ||
-          state.players.length < 2 ||
-          state.matches.length > 0
-        }
-        onClick={async () => createMatches(state.players)}
-      >
-        Create Matches
-      </Button>
-      {state.selectedTournament && (
+    <Card sx={{ minWidth: 275 }} variant="outlined">
+      <CardContent>
+        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          Admin Tools
+        </Typography>
         <Button
-          disabled={state.selectedTournament?.end_dt !== null}
-          onClick={async () => {
-            if (state.selectedTournament && !state.selectedTournament.end_dt)
-              await endTournament(
-                state.authToken as string,
-                state.selectedTournament.tournament_id
-              );
-          }}
-        >
-          End tournament
+          onClick={async () => setOpenAddTournament(true)}
+          variant="outlined"
+          sx={{ margin: "4px" }}
+          >
+          Create Tournament
         </Button>
-      )}
+
+        {state.selectedTournament && (
+          <>
+            <Button
+              disabled={
+                !state.selectedTournament?.end_dt ||
+                state.players.length < 2 ||
+                state.matches.length > 0
+              }
+              onClick={async () => createMatches(state.players)}
+              variant="outlined"
+              sx={{ margin: "4px" }}
+            >
+              Create Matches
+            </Button>
+            <Button
+              disabled={state.selectedTournament?.end_dt !== null}
+              onClick={async () => {
+                if (
+                  state.selectedTournament &&
+                  !state.selectedTournament.end_dt
+                )
+                  await endTournament(
+                    state.authToken as string,
+                    state.selectedTournament.tournament_id
+                  );
+              }}
+              variant="outlined"
+              sx={{ margin: "4px" }}
+            >
+              End tournament
+            </Button>
+          </>
+        )}
+      </CardContent>
 
       <Dialog open={openAddTournament} onClose={handleAddTournamentClose}>
         <DialogTitle>Add tournament</DialogTitle>
@@ -93,10 +117,14 @@ export default function AdminActions() {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleAddTournamentClose}>Cancel</Button>
-          <Button onClick={handleAddTournament}>Save</Button>
+          <Button onClick={handleAddTournamentClose} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleAddTournament} variant="outlined">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </Card>
   );
 }

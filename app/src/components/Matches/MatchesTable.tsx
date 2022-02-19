@@ -11,7 +11,6 @@ import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { getComparator, Order, stableSort } from "../../utils/tableSorters";
@@ -135,6 +134,7 @@ export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
                   disabled={state.selectedTournament?.end_dt !== null}
                   style={{ padding: 0 }}
                   onClick={() => setSelectedMatch(match)}
+                  variant="outlined"
                 >
                   Edit
                 </Button>
@@ -172,8 +172,8 @@ export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
+          <Button onClick={handleClose} variant="outlined">Cancel</Button>
+          <Button onClick={handleSave} variant="outlined">Save</Button>
         </DialogActions>
       </Dialog>
     </TableContainer>

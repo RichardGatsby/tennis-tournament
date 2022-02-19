@@ -67,36 +67,44 @@ export default function TournamentSelector() {
       {state.selectedTournament && (
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
-            <Typography variant="h5" component="div">
-              Tournament: {state.selectedTournament.name}
-            </Typography>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              Start date:
-              {new Date(state.selectedTournament.start_dt).toDateString() ?? ""}
-            </Typography>
-            <Typography
-              sx={{ fontSize: 14 }}
-              color="text.secondary"
-              gutterBottom
-            >
-              End date:
-              {state.selectedTournament.end_dt && new Date(state.selectedTournament.end_dt).toDateString()}
-            </Typography>
-            <Button
-              sx={{ float: "right" }}
-              onClick={() =>
-                dispatch({
-                  type: "SET_SELECTED_TOURNAMENT",
-                  payload: null,
-                })
-              }
-            >
-              close
-            </Button>
+            <Box>
+              <Box>
+                <Typography variant="h5" component="div">
+                  Tournament: {state.selectedTournament.name}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  Start date:
+                  {new Date(state.selectedTournament.start_dt).toDateString() ??
+                    ""}
+                </Typography>
+                <Typography
+                  sx={{ fontSize: 14 }}
+                  color="text.secondary"
+                  gutterBottom
+                >
+                  End date:
+                  {state.selectedTournament.end_dt &&
+                    new Date(state.selectedTournament.end_dt).toDateString()}
+                </Typography>
+              </Box>
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  onClick={() =>
+                    dispatch({
+                      type: "SET_SELECTED_TOURNAMENT",
+                      payload: null,
+                    })
+                  }
+                  variant="outlined"
+                >
+                  close
+                </Button>
+              </Box>
+            </Box>
           </CardContent>
         </Card>
       )}

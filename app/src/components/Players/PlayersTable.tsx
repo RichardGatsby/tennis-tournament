@@ -28,7 +28,7 @@ export const PlayersTable = ({
   return (
     <Container>
       {!matchesCreated && (
-        <Button onClick={() => setIsOpen(true)}>Add player</Button>
+        <Button onClick={() => setIsOpen(true)} variant="outlined">Add player</Button>
       )}
 
       <TableContainer component={Paper}>
