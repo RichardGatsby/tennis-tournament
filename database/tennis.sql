@@ -1,5 +1,5 @@
 
-CREATE DATABASE [IF NOT EXISTS] tennis;
+CREATE DATABASE IF NOT EXISTS tennis;
 
 BEGIN;
 
@@ -24,8 +24,8 @@ CREATE TABLE tournaments (
     tournament_type varchar NULL,
     name varchar NOT NULL,
     start_dt timestamp NOT NULL,
-    end_date timestamp NULL
-)
+    end_dt timestamp NULL
+);
 
 --TODO: Alter this to not null once we have the first tournament created and data migrated in real db
 ALTER TABLE matches
