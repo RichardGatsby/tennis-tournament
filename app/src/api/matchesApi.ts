@@ -10,11 +10,14 @@ export interface Game {
   player_two_score: number;
   winner: number;
 }
-const apiBaseUrl = getConfig().apiUrl
+const apiBaseUrl = getConfig().apiUrl;
 
-export const getMatches = async (token: string): Promise<Game[]> => {
+export const getMatches = async (
+  tournamentId: number,
+  token: string
+): Promise<Game[]> => {
   const response = await (
-    await fetch(`${apiBaseUrl}/v1/matches`, {
+    await fetch(`${apiBaseUrl}/v1/matches?tournamentId=${tournamentId}`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: token,

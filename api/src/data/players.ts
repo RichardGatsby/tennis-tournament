@@ -6,13 +6,14 @@ export interface Player {
     name: string
 }
 
-export const getPlayers = async (): Promise<Player[]> => {
+export const getPlayers = async (tournamentId?: number): Promise<Player[]> => {
     const res = await  query('SELECT * FROM public.players')
     return res
 }
 
-export const addPlayer = async (data: AddPlayerRequest): Promise<void> => {
-    await  query('INSERT INTO public.players(name) VALUES($1)', [data.name])
+export const addPlayer = async (data: AddPlayerRequest): Promise<Player> => {
+   const result = await  query('INSERT INTO public.players(name) VALUES($1) RETURNING *', [data.name])
+   return result[0]
 }
 
 export const deletePlayer = async (playerId: number): Promise<void> => {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -15,6 +15,7 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button";
 import { getComparator, Order, stableSort } from "../../utils/tableSorters";
+import { Context } from "../../store";
 interface MatchesTableProps {
   matches: Game[];
   scoreAdded: (
@@ -24,6 +25,8 @@ interface MatchesTableProps {
   ) => void;
 }
 export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
+  const { state, dispatch } = useContext(Context);
+
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Game>("match_id");
 
@@ -129,6 +132,7 @@ export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
               <TableCell>{match.player_two_score}</TableCell>
               <TableCell>
                 <Button
+                  disabled={state.selectedTournament?.end_dt !== null}
                   style={{ padding: 0 }}
                   onClick={() => setSelectedMatch(match)}
                 >

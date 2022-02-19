@@ -24,7 +24,7 @@ export const Main = () => {
         alignItems: "center",
         flexDirection: "column",
         marginLeft: 0,
-        marginRight: 0
+        marginRight: 0,
       }}
     >
       {state.authToken ? (
@@ -36,7 +36,7 @@ export const Main = () => {
             flexDirection: "column",
             alignItems: "center",
             marginLeft: 0,
-            marginRight: 0
+            marginRight: 0,
           }}
         >
           Enter password

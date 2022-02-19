@@ -9,46 +9,26 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
+import { AddPlayerDialog } from "./AddPlayerDialog";
 
 interface PlayersTableProps {
   players: Player[];
   isAdmin: boolean;
   matchesCreated: boolean;
-  addPlayer: (name: string) => void;
   deletePlayer: (id: number) => void;
 }
 export const PlayersTable = ({
   players,
   isAdmin,
   matchesCreated,
-  addPlayer,
   deletePlayer,
 }: PlayersTableProps) => {
-  const [name, setName] = useState<string | null>(null);
-  const [open, setOpen] = useState<boolean>(false);
-
-  const handleSave = async () => {
-    if (name) {
-      await addPlayer(name);
-      handleClose();
-    }
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-    setName(null);
-  };
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   return (
     <Container>
       {!matchesCreated && (
-        <Button onClick={() => setOpen(true)}>Add player</Button>
+        <Button onClick={() => setIsOpen(true)}>Add player</Button>
       )}
 
       <TableContainer component={Paper}>
@@ -71,9 +51,7 @@ export const PlayersTable = ({
                 </TableCell>
                 <TableCell>{player.name}</TableCell>
                 {isAdmin && !matchesCreated && (
-                  <TableCell
-                    onClick={() => deletePlayer(player.player_id)}
-                  >
+                  <TableCell onClick={() => deletePlayer(player.player_id)}>
                     Delete
                   </TableCell>
                 )}
@@ -82,28 +60,7 @@ export const PlayersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Add player</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Enter the name and press save to add a player
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="Name"
-            type="text"
-            variant="standard"
-            onChange={(event) => setName(event.target.value)}
-            value={name}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleSave}>Save</Button>
-        </DialogActions>
-      </Dialog>
+      <AddPlayerDialog isOpen={isOpen} handleClose={() => setIsOpen(false)} />
     </Container>
   );
 };

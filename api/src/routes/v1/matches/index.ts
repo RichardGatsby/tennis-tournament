@@ -2,18 +2,24 @@ import express, { Request } from "express";
 import expressAsyncHandler from "express-async-handler";
 import { Decoders as D, runDecoderE, GetType } from "typed-decoders";
 import {
-  addMatches,
   addMatchScore,
   deleteAllMatches,
   getMatches,
   Match,
 } from "../../../data/matches";
+import { StringToNumber } from "../../../utils/typed-decoders";
 
 const router = express.Router();
-router.get(
+
+const GetMatchesQuery = D.Obj({}, {
+    tournamentId: StringToNumber
+});
+
+export type GetMatchesQuery = GetType<typeof GetMatchesQuery>;router.get(
   "",
   expressAsyncHandler<Match[]>(async (req, res) => {
-    res.json(await getMatches());
+    const query = runDecoderE(GetMatchesQuery, req.query)
+    res.json(await getMatches(query.tournamentId));
   })
 );
 

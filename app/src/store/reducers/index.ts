@@ -24,6 +24,17 @@ const Reducer = (state: State, action: any) => {
         ...state,
         matches: action.payload,
       };
+    case "SET_TOURNAMENTS": {
+      return {
+        ...state,
+        tournaments: action.payload,
+      };
+    }
+    case "SET_SELECTED_TOURNAMENT":
+      return {
+        ...state,
+        selectedTournament: action.payload,
+      };
     default:
       return state;
   }

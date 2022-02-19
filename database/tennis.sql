@@ -37,4 +37,15 @@ ADD CONSTRAINT fk_tournaments FOREIGN KEY (tournament_id)
 REFERENCES tournaments (tournament_id) MATCH FULL;
 
 
+CREATE TABLE tournaments_players (
+    tournament_id integer,
+    player_id integer,
+    CONSTRAINT fk_player
+      FOREIGN KEY(player_id) 
+	  REFERENCES players(player_id),
+    CONSTRAINT fk_tournament
+      FOREIGN KEY(tournament_id) 
+	  REFERENCES tournaments(tournament_id)
+);
+
 COMMIT;

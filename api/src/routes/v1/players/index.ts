@@ -4,6 +4,7 @@ import { addPlayer, deletePlayer, getPlayers } from "../../../data/players";
 import { Decoders as D, runDecoderE, GetType } from "typed-decoders";
 
 const router = express.Router();
+
 router.get(
   "",
   expressAsyncHandler(async (req, res) => {

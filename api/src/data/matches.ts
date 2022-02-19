@@ -12,9 +12,9 @@ export interface Match {
   winner: number;
 }
 
-export const getMatches = async (): Promise<Match[]> => {
+export const getMatches = async (tournamentId?: number): Promise<Match[]> => {
   const res = await query(
-    "SELECT m.*, p.name as player_one_name, p2.name as player_two_name FROM public.matches m LEFT JOIN public.players p ON m.player_one_id = p.player_id LEFT JOIN public.players p2 ON m.player_two_id = p2.player_id ORDER BY match_id"
+    `SELECT m.*, p.name as player_one_name, p2.name as player_two_name FROM public.matches m LEFT JOIN public.players p ON m.player_one_id = p.player_id LEFT JOIN public.players p2 ON m.player_two_id = p2.player_id ${tournamentId ? ('WHERE tournament_id = ' +tournamentId):''} ORDER BY match_id`
   );
   return res;
 };

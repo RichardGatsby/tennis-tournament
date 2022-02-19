@@ -4,7 +4,7 @@ export interface Player {
   player_id: number;
   name: string;
 }
-const apiBaseUrl = getConfig().apiUrl
+const apiBaseUrl = getConfig().apiUrl;
 export const getPlayers = async (token: string): Promise<Player[]> => {
   const response = await (
     await fetch(`${apiBaseUrl}/v1/players`, {
@@ -21,7 +21,7 @@ export const addPlayer = async (
   data: {
     name: string;
   }
-): Promise<boolean> => {
+): Promise<Player> => {
   const response = await (
     await fetch(`${apiBaseUrl}/v1/players`, {
       method: "POST",
@@ -31,22 +31,6 @@ export const addPlayer = async (
       },
       body: JSON.stringify(data),
     })
-  ).ok;
-  return response;
-};
-
-export const deletePlayer = async (
-  token: string,
-  playerId: number
-): Promise<boolean> => {
-  const response = await (
-    await fetch(`${apiBaseUrl}/v1/admin/players/${playerId}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    })
-  ).ok;
+  ).json();
   return response;
 };
