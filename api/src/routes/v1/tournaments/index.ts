@@ -18,8 +18,6 @@ router.get(
 router.post(
   "/:tournamentId/players",
   expressAsyncHandler(async (req, res) => {
-    console.log("we here: ",req.params.tournamentId )
-    console.log(req.body)
     const tournamentId = runDecoderE(D.Num, parseInt(req.params.tournamentId))
     const playerId = runDecoderE(D.Num, parseInt(req.body.player_id))
 
@@ -40,7 +38,6 @@ router.delete(
 router.get(
   "/:tournamentId/players",
   expressAsyncHandler(async (req, res) => {
-    console.log("we here: ",req.params.tournamentId )
     const tournamentId = runDecoderE(D.Num, parseInt(req.params.tournamentId))
     res.json(await getTournamentsPlayers(tournamentId));
   })
