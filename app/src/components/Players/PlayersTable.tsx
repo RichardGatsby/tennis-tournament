@@ -15,12 +15,14 @@ interface PlayersTableProps {
   players: Player[];
   isAdmin: boolean;
   matchesCreated: boolean;
+  playersEdited: () => void;
   deletePlayer: (id: number) => void;
 }
 export const PlayersTable = ({
   players,
   isAdmin,
   matchesCreated,
+  playersEdited,
   deletePlayer,
 }: PlayersTableProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -28,7 +30,9 @@ export const PlayersTable = ({
   return (
     <Container>
       {!matchesCreated && (
-        <Button onClick={() => setIsOpen(true)} variant="outlined">Add player</Button>
+        <Button onClick={() => setIsOpen(true)} variant="outlined">
+          Add player
+        </Button>
       )}
 
       <TableContainer component={Paper}>
@@ -51,7 +55,10 @@ export const PlayersTable = ({
                 </TableCell>
                 <TableCell>{player.name}</TableCell>
                 {isAdmin && !matchesCreated && (
-                  <TableCell onClick={() => deletePlayer(player.player_id)}>
+                  <TableCell
+                    onClick={() => deletePlayer(player.player_id)}
+                    style={{ cursor: "pointer" }}
+                  >
                     Delete
                   </TableCell>
                 )}
@@ -60,7 +67,13 @@ export const PlayersTable = ({
           </TableBody>
         </Table>
       </TableContainer>
-      <AddPlayerDialog isOpen={isOpen} handleClose={() => setIsOpen(false)} />
+      <AddPlayerDialog
+        isOpen={isOpen}
+        handleClose={() => {
+          setIsOpen(false);
+          playersEdited();
+        }}
+      />
     </Container>
   );
 };

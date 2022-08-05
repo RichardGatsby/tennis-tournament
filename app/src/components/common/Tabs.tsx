@@ -4,18 +4,20 @@ import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
-import { addMatchScore, Game, getMatches } from "../../api/matchesApi";
+import {
+  addMatchScore,
+  Game,
+  getTournamentsMatches,
+} from "../../api/matchesApi";
 import { LeaderBoardTable } from "../LeaderBoard/LeaderBoardTable";
 import { Context } from "../../store";
 import { PlayersTable } from "../Players/PlayersTable";
 import { MatchesTable } from "../Matches/MatchesTable";
 import {
   deleteTournamentsPlayer,
-  getTournaments,
   getTournamentsPlayers,
 } from "../../api/tournamentsApi";
-import AdminActions from "../AdminActions/AdminActions";
-import TournamentSelector from "../TournamentSelector/TournamentSelector";
+import {  useParams } from "react-router-dom";
 
 function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
@@ -52,17 +54,12 @@ function a11yProps(index: number) {
 
 export default function TabContainer() {
   const { state, dispatch } = useContext(Context);
-  const [value, setValue] = useState(0);
-
-  const loadData = async () => {
-    await loadTournaments();
-    await loadPlayers();
-    await loadMatches();
-  };
+  const { tournamentId } = useParams();
+  const [tabIndex, setTabIndex] = useState(0);
 
   const loadMatches = async () => {
     if (state.selectedTournament) {
-      const matches = await getMatches(
+      const matches = await getTournamentsMatches(
         state.selectedTournament.tournament_id,
         state.authToken as string
       );
@@ -78,15 +75,6 @@ export default function TabContainer() {
       );
       dispatch({ type: "SET_PLAYERS", payload: players });
     }
-  };
-
-  const loadTournaments = async () => {
-    const tournaments = await getTournaments(state.authToken as string);
-    dispatch({ type: "SET_TOURNAMENTS", payload: tournaments });
-  };
-
-  const handleChange = (event: any, newValue: number) => {
-    setValue(newValue);
   };
 
   const scoreAdded = async (
@@ -117,42 +105,54 @@ export default function TabContainer() {
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
-
-  useEffect(() => {
     loadMatches();
     loadPlayers();
   }, [state.selectedTournament]);
 
+  useEffect(() => {
+    if (tournamentId && state.tournaments.length > 0) {
+      const tournament =
+        state.tournaments.find(
+          (row) => row.tournament_id.toString() === tournamentId
+        ) ?? null;
+      dispatch({
+        type: "SET_SELECTED_TOURNAMENT",
+        payload: tournament,
+      });
+    }
+  }, [tournamentId, state.tournaments]);
+
   return (
     <Box sx={{ width: "100%" }}>
-      {state.isAdmin && <AdminActions />}
-      <TournamentSelector />
+
       {state.selectedTournament && (
         <Box>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <Tabs value={value} onChange={handleChange}>
+            <Tabs
+              value={tabIndex}
+              onChange={(_: any, newValue: number) => setTabIndex(newValue)}
+            >
               <Tab label="Players" {...a11yProps(0)} />
               <Tab label="Matches" {...a11yProps(1)} />
               <Tab label="Leaderboard" {...a11yProps(2)} />
             </Tabs>
           </Box>
-          <TabPanel value={value} index={0}>
+          <TabPanel value={tabIndex} index={0}>
             <PlayersTable
               players={state.players}
               deletePlayer={removePlayer}
               isAdmin={state.isAdmin}
               matchesCreated={state.matches.length > 0}
+              playersEdited={loadPlayers}
             ></PlayersTable>
           </TabPanel>
-          <TabPanel value={value} index={1}>
+          <TabPanel value={tabIndex} index={1}>
             <MatchesTable
               matches={state.matches}
               scoreAdded={scoreAdded}
             ></MatchesTable>
           </TabPanel>
-          <TabPanel value={value} index={2}>
+          <TabPanel value={tabIndex} index={2}>
             <LeaderBoardTable
               players={state.players}
               matches={state.matches}

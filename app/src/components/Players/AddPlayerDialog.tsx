@@ -9,12 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { Context } from "../../store";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-} from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 import { addTournamentsPlayer } from "../../api/tournamentsApi";
 interface PlayersTableProps {
   isOpen: boolean;
@@ -38,7 +33,7 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
     //TODO: this is atm a bit hacky since we check if theres a selection and save that and if not then add the new player with the name :))
     if (selectedPlayerId) {
       //TODO: cleanup the as
-      await addTournamentsPlayer(
+      const res = await addTournamentsPlayer(
         state.authToken as string,
         state.selectedTournament?.tournament_id as number,
         { player_id: selectedPlayerId as number }
@@ -46,7 +41,7 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
     } else {
       if (name) {
         const player = await addPlayer(state.authToken as string, { name });
-        await addTournamentsPlayer(
+        const res = await addTournamentsPlayer(
           state.authToken as string,
           state.selectedTournament?.tournament_id as number,
           { player_id: player.player_id }
@@ -74,7 +69,9 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
               onChange={handleChange}
             >
               {players.map((player) => (
-                <MenuItem value={player.player_id} key={player.player_id}>{player.name}</MenuItem>
+                <MenuItem value={player.player_id} key={player.player_id}>
+                  {player.name}
+                </MenuItem>
               ))}
             </Select>
           </FormControl>
@@ -95,8 +92,12 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="outlined">Cancel</Button>
-          <Button onClick={handleSavePlayer} variant="outlined">Save</Button>
+          <Button onClick={handleClose} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleSavePlayer} variant="outlined">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </Container>

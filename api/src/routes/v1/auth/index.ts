@@ -1,4 +1,4 @@
-import express, { Request, response } from "express";
+import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import { getConfig } from "../../../config";
 import { sign } from "../../../utils/jwt";
@@ -14,12 +14,24 @@ router.get(
       return;
     }
     if (authHeader === config.tokenPassword) {
-      res.send(sign(false));
+      res
+        .cookie("access_token", sign(false), {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+        })
+        .status(200)
+        .json({ message: "Logged in successfully 😊 👌" });
       return;
     }
     if (authHeader === config.tokenAdminPassword) {
-      res.send(sign(true));
-      return
+      res
+        .cookie("access_token", sign(true), {
+          httpOnly: false,
+          secure: process.env.NODE_ENV === "production",
+        })
+        .status(200)
+        .json({ message: "Logged in successfully 😊 👌" });
+      return;
     }
     res.send(401).send();
   })

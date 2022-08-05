@@ -11,15 +11,16 @@ export interface Tournament {
 const apiBaseUrl = getConfig().apiUrl;
 
 export const getTournaments = async (token: string): Promise<Tournament> => {
-  const response = await (
-    await fetch(`${apiBaseUrl}/v1/tournaments`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
-    })
-  ).json();
-  return response;
+  const response = await await fetch(`${apiBaseUrl}/v1/tournaments`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  });
+  if (response.status === 401) {
+    throw response.json();
+  }
+  return response.json();
 };
 
 interface AddTournament {
@@ -47,7 +48,7 @@ export const endTournament = async (
   token: string,
   tournamentId: number
 ): Promise<void> => {
-  await await fetch(`${apiBaseUrl}/v1/admin/tournaments/${tournamentId}/end`, {
+  await fetch(`${apiBaseUrl}/v1/admin/tournaments/${tournamentId}/end`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

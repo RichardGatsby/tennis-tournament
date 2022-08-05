@@ -1,22 +1,46 @@
-import { useContext, useState } from "react";
-import Button from "@mui/material/Button";
+import { useContext, useEffect } from "react";
 import Container from "@mui/material/Container";
-import TextField from "@mui/material/TextField";
-import TabContainer from "./Tabs";
 import { Context } from "../../store";
-import { login } from "../../api/auth";
-import { Box, Card, CardContent } from "@mui/material";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import { Login } from "../Login/Login";
+import AdminActions from "../AdminActions/AdminActions";
+import Box from "@mui/material/Box";
+import TabContainer from "./Tabs";
+import { useCookies } from "react-cookie";
+import { getTournaments } from "../../api/tournamentsApi";
+import TournamentSelector from "../TournamentSelector/TournamentSelector";
 
 export const Main = () => {
   const { state, dispatch } = useContext(Context);
-  const [inputValue, setInputValue] = useState("");
+  const navigate = useNavigate();
+  const [cookies, removeCookie] = useCookies();
 
-  const handleLogin = async () => {
-    const token = await login(inputValue);
-    if (token) {
-      dispatch({ type: "UPDATE_TOKEN", payload: token });
+  const loadTournaments = async () => {
+    try {
+      const tournaments = await getTournaments(state.authToken as string);
+      dispatch({ type: "SET_TOURNAMENTS", payload: tournaments });
+    } catch (e) {
+      //TODO: implement real error handling for 401 this is horrible :))
+      removeCookie("access_token", '');
+      dispatch({ type: "UPDATE_TOKEN", payload: null });
     }
   };
+
+  useEffect(() => {
+    if (!state.authToken) {
+      if (cookies.access_token) {
+        dispatch({ type: "UPDATE_TOKEN", payload: cookies.access_token });
+      } else {
+        navigate("/login");
+      }
+    }
+  }, []);
+  useEffect(() => {
+    if (state.authToken) {
+      loadTournaments();
+    }
+  }, [state.authToken]);
+
   return (
     <Container
       disableGutters={window.innerWidth < 400}
@@ -28,35 +52,14 @@ export const Main = () => {
         marginRight: 0,
       }}
     >
-      {state.authToken ? (
-        <TabContainer></TabContainer>
-      ) : (
-        <Card sx={{ minWidth: 275 }} variant="outlined">
-          <CardContent
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Box py={2}>Enter password</Box>
-            <TextField
-              value={inputValue}
-              onChange={(event) => setInputValue(event.target.value.toLowerCase())}
-              onKeyPress={(ev) => {
-                if (ev.key === "Enter") {
-                  handleLogin()
-                }
-              }}
-            ></TextField>
-            <Box py={2}>
-              <Button onClick={handleLogin} variant="outlined">
-                Login
-              </Button>
-            </Box>
-          </CardContent>
-        </Card>
-      )}
+      <Box sx={{ width: "100%" }}>
+        {state.isAdmin && <AdminActions />}
+        {state.tournaments && <TournamentSelector />}
+        <Routes>
+          <Route path="/tournaments/:tournamentId" element={<TabContainer />} />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </Box>
     </Container>
   );
 };

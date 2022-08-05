@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 import { useContext, useEffect, useState } from "react";
 import { Context } from "../../store";
-
 import {
   Button,
   Card,
@@ -12,18 +11,13 @@ import {
   Select,
   Typography,
 } from "@mui/material";
-import { getTournaments, Tournament } from "../../api/tournamentsApi";
+import { useNavigate } from "react-router-dom";
 
 export default function TournamentSelector() {
   const { state, dispatch } = useContext(Context);
-  const [selectedTournamentId, setSelectedTournamentId] = useState<
-    number | null
-  >(null);
 
-  const loadTournaments = async () => {
-    const tournaments = await getTournaments(state.authToken as string);
-    dispatch({ type: "SET_TOURNAMENTS", payload: tournaments });
-  };
+  const [selectedTournamentId] = useState<number | null>(null);
+  const navigate = useNavigate();
 
   const handleTournamentChange = (event: any) => {
     const tournament =
@@ -34,36 +28,48 @@ export default function TournamentSelector() {
       type: "SET_SELECTED_TOURNAMENT",
       payload: tournament,
     });
+    navigate(`/tournaments/${tournament?.tournament_id}`);
   };
-  useEffect(() => {
-    setSelectedTournamentId(state?.selectedTournament?.tournament_id ?? null);
-  }, [state.selectedTournament]);
+  const closeTournament = () => {
+    dispatch({
+      type: "SET_SELECTED_TOURNAMENT",
+      payload: null,
+    });
+    navigate("/");
+  };
   return (
     <Box sx={{ width: "100%" }}>
-      {!state.selectedTournament && (
-        <Box>
-          <FormControl fullWidth>
-            <InputLabel id="select-tournament-label">
-              Select tournament
-            </InputLabel>
-            <Select
-              labelId="select-tournament-label"
-              id="select-tournament"
-              value={selectedTournamentId}
-              onChange={handleTournamentChange}
-            >
-              {state.tournaments.map((tournament) => (
-                <MenuItem
-                  value={tournament.tournament_id}
-                  key={tournament.tournament_id}
-                >
-                  {tournament.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      )}
+      {!state.selectedTournament &&
+        state.tournaments &&
+        state.tournaments.length > 0 && (
+          <Box>
+            <FormControl fullWidth>
+              <InputLabel id="select-tournament-label">
+                Select tournament
+              </InputLabel>
+              <Select
+                labelId="select-tournament-label"
+                id="select-tournament"
+                value={selectedTournamentId}
+                onChange={handleTournamentChange}
+              >
+                {state.tournaments?.map((tournament) => (
+                  <MenuItem
+                    value={tournament.tournament_id}
+                    key={tournament.tournament_id}
+                  >
+                    <Typography>{tournament.name}</Typography>
+                    {tournament.end_dt && (
+                      <Typography color={"red"} paddingLeft="10px">{`ended ${new Date(
+                        tournament.end_dt
+                      ).toDateString()}`}</Typography>
+                    )}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        )}
       {state.selectedTournament && (
         <Card sx={{ minWidth: 275 }}>
           <CardContent>
@@ -92,15 +98,7 @@ export default function TournamentSelector() {
                 </Typography>
               </Box>
               <Box display="flex" justifyContent="flex-end">
-                <Button
-                  onClick={() =>
-                    dispatch({
-                      type: "SET_SELECTED_TOURNAMENT",
-                      payload: null,
-                    })
-                  }
-                  variant="outlined"
-                >
+                <Button onClick={closeTournament} variant="outlined">
                   close
                 </Button>
               </Box>

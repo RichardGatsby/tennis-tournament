@@ -5,12 +5,7 @@ import { Player } from "../../api/playersApi";
 import Button from "@mui/material/Button";
 import { Context } from "../../store";
 
-import {
-  Card,
-  CardContent,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, TextField, Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -60,18 +55,14 @@ export default function AdminActions() {
           onClick={async () => setOpenAddTournament(true)}
           variant="outlined"
           sx={{ margin: "4px" }}
-          >
+        >
           Create Tournament
         </Button>
 
         {state.selectedTournament && (
           <>
             <Button
-              disabled={
-                !state.selectedTournament?.end_dt ||
-                state.players.length < 2 ||
-                state.matches.length > 0
-              }
+              disabled={state.players.length < 2 || state.matches.length > 0}
               onClick={async () => createMatches(state.players)}
               variant="outlined"
               sx={{ margin: "4px" }}

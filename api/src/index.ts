@@ -1,15 +1,25 @@
-import 'dotenv/config'
+import "dotenv/config";
 import express, { Application } from "express";
 import createRoutes from "./routes";
-import cors from 'cors';
+import cors from "cors";
 import { getConfig } from "./config";
+import cookieParser from "cookie-parser";
 
 const app: Application = express();
 
 const config = getConfig();
-app.use(cors())
+var corsOptions =
+  process.env.NODE_ENV === "production"
+    ? { credentilas: true }
+    : {
+        origin: "http://localhost:3000",
+        credentials: true,
+      };
+      
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.use(createRoutes);
 

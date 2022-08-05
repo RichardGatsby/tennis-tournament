@@ -12,7 +12,7 @@ export interface Game {
 }
 const apiBaseUrl = getConfig().apiUrl;
 
-export const getMatches = async (
+export const getTournamentsMatches = async (
   tournamentId: number,
   token: string
 ): Promise<Game[]> => {
