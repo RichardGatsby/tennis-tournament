@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model matches {
+  match_id         Int          @id @default(autoincrement())
+  match_type       String?      @db.VarChar
+  player_one_id    Int
+  player_two_id    Int
+  player_one_score String?      @db.VarChar
+  player_two_score String?      @db.VarChar
+  winner           Int?
+  tournament_id    Int?
+  tournaments      tournaments? @relation(fields: [tournament_id], references: [tournament_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tournaments")
+}
+
+model players {
+  player_id           Int                   @id @default(autoincrement())
+  name                String
+  tournaments_players tournaments_players[] @ignore
+}
+
+model tournaments {
+  tournament_id       Int                   @id @default(autoincrement())
+  tournament_type     String?               @db.VarChar
+  name                String                @db.VarChar
+  start_dt            DateTime              @db.Timestamp(6)
+  end_dt              DateTime?             @db.Timestamp(6)
+  matches             matches[]
+  tournaments_players tournaments_players[] @ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model tournaments_players {
+  tournament_id Int?
+  player_id     Int?
+  players       players?     @relation(fields: [player_id], references: [player_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_player")
+  tournaments   tournaments? @relation(fields: [tournament_id], references: [tournament_id], onDelete: NoAction, onUpdate: NoAction, map: "fk_tournament")
+
+  @@ignore
+}
