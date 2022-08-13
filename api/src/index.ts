@@ -10,7 +10,7 @@ const app: Application = express();
 const config = getConfig();
 var corsOptions =
   process.env.NODE_ENV === "production"
-    ? { credentilas: true, origin: config.allowOrigin }
+    ? { credentials: true, origin: config.allowOrigin }
     : {
         origin: "http://localhost:3000",
         credentials: true,
