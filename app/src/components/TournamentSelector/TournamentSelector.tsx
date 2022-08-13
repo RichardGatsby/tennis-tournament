@@ -15,7 +15,6 @@ import { useNavigate } from "react-router-dom";
 
 export default function TournamentSelector() {
   const { state, dispatch } = useContext(Context);
-
   const [selectedTournamentId] = useState<number | null>(null);
   const navigate = useNavigate();
 
@@ -37,6 +36,7 @@ export default function TournamentSelector() {
     });
     navigate("/");
   };
+
   return (
     <Box sx={{ width: "100%" }}>
       {!state.selectedTournament &&
@@ -50,7 +50,7 @@ export default function TournamentSelector() {
               <Select
                 labelId="select-tournament-label"
                 id="select-tournament"
-                value={selectedTournamentId}
+                value={selectedTournamentId ?? ''}
                 onChange={handleTournamentChange}
               >
                 {state.tournaments?.map((tournament) => (

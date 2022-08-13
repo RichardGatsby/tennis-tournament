@@ -3,7 +3,7 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   addMatchScore,
   Game,
@@ -17,7 +17,7 @@ import {
   deleteTournamentsPlayer,
   getTournamentsPlayers,
 } from "../../api/tournamentsApi";
-import {  useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 function TabPanel(props: any) {
   const { children, value, index, ...other } = props;
@@ -32,7 +32,7 @@ function TabPanel(props: any) {
     >
       {value === index && (
         <Box sx={{ p: window.innerWidth < 400 ? 1 : 3 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -52,9 +52,19 @@ function a11yProps(index: number) {
   };
 }
 
+function useQuery() {
+  const { search } = useLocation();
+
+  return React.useMemo(() => new URLSearchParams(search), [search]);
+}
+
 export default function TabContainer() {
   const { state, dispatch } = useContext(Context);
   const { tournamentId } = useParams();
+  const query = useQuery();
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [tabIndex, setTabIndex] = useState(0);
 
   const loadMatches = async () => {
@@ -104,6 +114,13 @@ export default function TabContainer() {
     await loadPlayers();
   };
 
+  const updateTabIndex = async (id: number) => {
+    setTabIndex(id)
+    const params = new URLSearchParams({['tabIndex']: id.toString() });
+    navigate({ pathname: location.pathname, search: params.toString() }); 
+
+  };
+
   useEffect(() => {
     loadMatches();
     loadPlayers();
@@ -122,15 +139,24 @@ export default function TabContainer() {
     }
   }, [tournamentId, state.tournaments]);
 
+  useEffect(() => {
+    const queryTabIndex = query.get("tabIndex");
+    if (queryTabIndex) {
+      const tId = parseInt(queryTabIndex);
+      if (!isNaN(tId)) {
+        setTabIndex(tId);
+      }
+    }
+  }, [query]);
+
   return (
     <Box sx={{ width: "100%" }}>
-
       {state.selectedTournament && (
         <Box>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
               value={tabIndex}
-              onChange={(_: any, newValue: number) => setTabIndex(newValue)}
+              onChange={(_: any, newValue: number) => updateTabIndex(newValue)}
             >
               <Tab label="Players" {...a11yProps(0)} />
               <Tab label="Matches" {...a11yProps(1)} />

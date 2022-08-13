@@ -21,7 +21,7 @@ export const Main = () => {
       dispatch({ type: "SET_TOURNAMENTS", payload: tournaments });
     } catch (e) {
       //TODO: implement real error handling for 401 this is horrible :))
-      removeCookie("access_token", '');
+      removeCookie("access_token", "");
       dispatch({ type: "UPDATE_TOKEN", payload: null });
     }
   };
@@ -35,6 +35,7 @@ export const Main = () => {
       }
     }
   }, []);
+
   useEffect(() => {
     if (state.authToken) {
       loadTournaments();
