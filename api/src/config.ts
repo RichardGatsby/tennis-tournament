@@ -12,6 +12,7 @@ export const getConfig = () => {
         signingKey: requireEnv('SIGNING_KEY'),
         tokenPassword: requireEnv('TOKEN_PASSWORD'),
         tokenAdminPassword: requireEnv('TOKEN_ADMIN_PASSWORD'),
-        tokenExpiresIn: requireEnv('TOKEN_EXPIRES_IN')
+        tokenExpiresIn: requireEnv('TOKEN_EXPIRES_IN'),
+        allowOrigin: requireEnv('ALLOW_ORIGIN')
     }
 }
