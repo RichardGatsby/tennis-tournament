@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Context } from "../../store";
 import {
   Button,
@@ -50,7 +50,7 @@ export default function TournamentSelector() {
               <Select
                 labelId="select-tournament-label"
                 id="select-tournament"
-                value={selectedTournamentId ?? ''}
+                value={selectedTournamentId ?? ""}
                 onChange={handleTournamentChange}
               >
                 {state.tournaments?.map((tournament) => (
@@ -60,7 +60,10 @@ export default function TournamentSelector() {
                   >
                     <Typography>{tournament.name}</Typography>
                     {tournament.end_dt && (
-                      <Typography color={"red"} paddingLeft="10px">{`ended ${new Date(
+                      <Typography
+                        color={"red"}
+                        paddingLeft="10px"
+                      >{`ended ${new Date(
                         tournament.end_dt
                       ).toDateString()}`}</Typography>
                     )}

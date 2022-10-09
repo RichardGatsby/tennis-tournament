@@ -13,12 +13,16 @@ router.get(
       res.sendStatus(401);
       return;
     }
+    //TODO: refactor as config variable to match the token expiration date
+    const expAt = new Date();
+    expAt.setDate(expAt.getDate() + 2);
     if (authHeader === config.tokenPassword) {
       res
         .cookie("access_token", sign(false), {
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "none"
+          domain: config.cookieTargetDomain,
+          expires: expAt
         })
         .status(200)
         .json({ message: "Logged in successfully 😊 👌" });
@@ -29,7 +33,8 @@ router.get(
         .cookie("access_token", sign(true), {
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
-          sameSite: "none"
+          domain: config.cookieTargetDomain,
+          expires: expAt
         })
         .status(200)
         .json({ message: "Logged in successfully 😊 👌" });

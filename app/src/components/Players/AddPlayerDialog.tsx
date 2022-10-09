@@ -17,7 +17,7 @@ interface PlayersTableProps {
 }
 
 export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
-  const { state, dispatch } = useContext(Context);
+  const { state } = useContext(Context);
   const [players, setPlayers] = useState<Player[]>([]);
   const [name, setName] = useState<string | null>(null);
   const [selectedPlayerId, setSelectedPlayerId] = useState<number | null>(null);
@@ -33,7 +33,7 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
     //TODO: this is atm a bit hacky since we check if theres a selection and save that and if not then add the new player with the name :))
     if (selectedPlayerId) {
       //TODO: cleanup the as
-      const res = await addTournamentsPlayer(
+      await addTournamentsPlayer(
         state.authToken as string,
         state.selectedTournament?.tournament_id as number,
         { player_id: selectedPlayerId as number }
@@ -41,7 +41,7 @@ export const AddPlayerDialog = ({ isOpen, handleClose }: PlayersTableProps) => {
     } else {
       if (name) {
         const player = await addPlayer(state.authToken as string, { name });
-        const res = await addTournamentsPlayer(
+        await addTournamentsPlayer(
           state.authToken as string,
           state.selectedTournament?.tournament_id as number,
           { player_id: player.player_id }

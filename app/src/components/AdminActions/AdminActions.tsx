@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import { useContext, useState } from "react";
 import { addTournament, endTournament } from "../../api/tournamentsApi";
 import { Player } from "../../api/playersApi";
@@ -14,7 +13,7 @@ import DialogTitle from "@mui/material/DialogTitle";
 import { addMatches } from "../../api/matchesApi";
 
 export default function AdminActions() {
-  const { state, dispatch } = useContext(Context);
+  const { state } = useContext(Context);
 
   const [openAddTournament, setOpenAddTournament] = useState<boolean>(false);
   const [tournamentName, setTournamentName] = useState<string | null>(null);

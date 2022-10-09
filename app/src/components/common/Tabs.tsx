@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import React, { useContext, useEffect, useState } from "react";
 import {
@@ -115,10 +114,9 @@ export default function TabContainer() {
   };
 
   const updateTabIndex = async (id: number) => {
-    setTabIndex(id)
-    const params = new URLSearchParams({['tabIndex']: id.toString() });
-    navigate({ pathname: location.pathname, search: params.toString() }); 
-
+    setTabIndex(id);
+    const params = new URLSearchParams({ ["tabIndex"]: id.toString() });
+    navigate({ pathname: location.pathname, search: params.toString() });
   };
 
   useEffect(() => {

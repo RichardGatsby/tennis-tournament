@@ -13,6 +13,7 @@ export const getConfig = () => {
         tokenPassword: requireEnv('TOKEN_PASSWORD'),
         tokenAdminPassword: requireEnv('TOKEN_ADMIN_PASSWORD'),
         tokenExpiresIn: requireEnv('TOKEN_EXPIRES_IN'),
-        allowOrigin: requireEnv('ALLOW_ORIGIN')
+        allowOrigin: requireEnv('ALLOW_ORIGIN'),
+        cookieTargetDomain: requireEnv('COOKIE_TARGET_DOMAIN')
     }
 }

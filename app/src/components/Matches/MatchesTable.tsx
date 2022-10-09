@@ -24,7 +24,7 @@ interface MatchesTableProps {
   ) => void;
 }
 export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
-  const { state, dispatch } = useContext(Context);
+  const { state } = useContext(Context);
 
   const [order, setOrder] = useState<Order>("asc");
   const [orderBy, setOrderBy] = useState<keyof Game>("match_id");
@@ -172,8 +172,12 @@ export const MatchesTable = ({ matches, scoreAdded }: MatchesTableProps) => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} variant="outlined">Cancel</Button>
-          <Button onClick={handleSave} variant="outlined">Save</Button>
+          <Button onClick={handleClose} variant="outlined">
+            Cancel
+          </Button>
+          <Button onClick={handleSave} variant="outlined">
+            Save
+          </Button>
         </DialogActions>
       </Dialog>
     </TableContainer>
