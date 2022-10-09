@@ -18,6 +18,7 @@ router.get(
         .cookie("access_token", sign(false), {
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
+          sameSite: "none"
         })
         .status(200)
         .json({ message: "Logged in successfully 😊 👌" });
@@ -28,6 +29,7 @@ router.get(
         .cookie("access_token", sign(true), {
           httpOnly: false,
           secure: process.env.NODE_ENV === "production",
+          sameSite: "none"
         })
         .status(200)
         .json({ message: "Logged in successfully 😊 👌" });
