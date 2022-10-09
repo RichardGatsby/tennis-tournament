@@ -3,14 +3,13 @@ import expressAsyncHandler from "express-async-handler";
 import { getTournaments } from "../../../data/tournament";
 import { addTournamentsPlayer, deleteTournamentsPlayer, getTournamentsPlayers } from "../../../data/tournamentsPlayers";
 import { Decoders as D, runDecoderE } from "typed-decoders";
-import { StringToNumber } from "../../../utils/typed-decoders";
 
 
 const router = express.Router();
 
 router.get(
   "",
-  expressAsyncHandler(async (req, res) => {
+  expressAsyncHandler(async (_, res) => {
     res.json(await getTournaments());
   })
 );

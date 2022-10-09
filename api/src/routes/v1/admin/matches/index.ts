@@ -22,7 +22,7 @@ router.post(
 
 router.delete(
   "/reset",
-  expressAsyncHandler(async (req, res) => {
+  expressAsyncHandler(async (_, res) => {
     res.json(await deleteAllMatches());
   })
 );

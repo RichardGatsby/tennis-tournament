@@ -1,13 +1,13 @@
-import express, { Request } from "express";
+import express from "express";
 import expressAsyncHandler from "express-async-handler";
-import { addPlayer, deletePlayer, getPlayers } from "../../../data/players";
+import { addPlayer, getPlayers } from "../../../data/players";
 import { Decoders as D, runDecoderE, GetType } from "typed-decoders";
 
 const router = express.Router();
 
 router.get(
   "",
-  expressAsyncHandler(async (req, res) => {
+  expressAsyncHandler(async (_, res) => {
     res.json(await getPlayers());
   })
 );

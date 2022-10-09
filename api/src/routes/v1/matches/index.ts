@@ -1,4 +1,4 @@
-import express, { Request } from "express";
+import express from "express";
 import expressAsyncHandler from "express-async-handler";
 import { Decoders as D, runDecoderE, GetType } from "typed-decoders";
 import {
@@ -45,7 +45,7 @@ router.post(
 
 router.delete(
   "/reset",
-  expressAsyncHandler(async (req, res) => {
+  expressAsyncHandler(async (_, res) => {
     res.json(await deleteAllMatches());
   })
 );
