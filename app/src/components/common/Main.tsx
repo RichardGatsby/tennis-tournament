@@ -15,9 +15,9 @@ export const Main = () => {
   const navigate = useNavigate();
   const [cookies, removeCookie] = useCookies();
 
-  const loadTournaments = async () => {
+  const loadTournaments = async (authToken: string) => {
     try {
-      const tournaments = await getTournaments(state.authToken as string);
+      const tournaments = await getTournaments(authToken);
       dispatch({ type: "SET_TOURNAMENTS", payload: tournaments });
     } catch (e) {
       //TODO: implement real error handling for 401 this is horrible :))
@@ -38,7 +38,7 @@ export const Main = () => {
 
   useEffect(() => {
     if (state.authToken) {
-      loadTournaments();
+      loadTournaments(state.authToken);
     }
   }, [state.authToken]);
 

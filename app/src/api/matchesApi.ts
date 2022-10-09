@@ -13,8 +13,8 @@ export interface Game {
 const apiBaseUrl = getConfig().apiUrl;
 
 export const getTournamentsMatches = async (
-  tournamentId: number,
-  token: string
+  token: string,
+  tournamentId: number
 ): Promise<Game[]> => {
   const response = await (
     await fetch(`${apiBaseUrl}/v1/matches?tournamentId=${tournamentId}`, {

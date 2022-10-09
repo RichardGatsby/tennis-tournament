@@ -66,32 +66,24 @@ export default function TabContainer() {
 
   const [tabIndex, setTabIndex] = useState(0);
 
-  const loadMatches = async () => {
-    if (state.selectedTournament) {
-      const matches = await getTournamentsMatches(
-        state.selectedTournament.tournament_id,
-        state.authToken as string
-      );
-      dispatch({ type: "SET_MATCHES", payload: matches });
-    }
+  const loadMatches = async (authToken: string, tournamentId: number) => {
+    const matches = await getTournamentsMatches(authToken, tournamentId);
+    dispatch({ type: "SET_MATCHES", payload: matches });
   };
 
-  const loadPlayers = async () => {
-    if (state.selectedTournament) {
-      const players = await getTournamentsPlayers(
-        state.authToken as string,
-        state.selectedTournament?.tournament_id
-      );
-      dispatch({ type: "SET_PLAYERS", payload: players });
-    }
+  const loadPlayers = async (authToken: string, tournamentId: number) => {
+    const players = await getTournamentsPlayers(authToken, tournamentId);
+    dispatch({ type: "SET_PLAYERS", payload: players });
   };
 
   const scoreAdded = async (
+    authToken: string,
+    tournamentId: number,
     firstScore: number,
     secondScore: number,
     selectedMatch: Game
   ) => {
-    await addMatchScore(state.authToken as string, selectedMatch.match_id, {
+    await addMatchScore(authToken, selectedMatch.match_id, {
       player_one_score: firstScore,
       player_two_score: secondScore,
       winner_id:
@@ -101,16 +93,16 @@ export default function TabContainer() {
           ? selectedMatch.player_one_id
           : selectedMatch.player_two_id,
     });
-    await loadMatches();
+    await loadMatches(authToken, tournamentId);
   };
 
-  const removePlayer = async (id: number) => {
-    await deleteTournamentsPlayer(
-      state.authToken as string,
-      state.selectedTournament?.tournament_id as number,
-      id
-    );
-    await loadPlayers();
+  const removePlayer = async (
+    id: number,
+    authToken: string,
+    tournamentId: number
+  ) => {
+    await deleteTournamentsPlayer(authToken, tournamentId, id);
+    await loadPlayers(authToken, tournamentId);
   };
 
   const updateTabIndex = async (id: number) => {
@@ -120,8 +112,10 @@ export default function TabContainer() {
   };
 
   useEffect(() => {
-    loadMatches();
-    loadPlayers();
+    if (state.authToken && state.selectedTournament) {
+      loadMatches(state.authToken, state.selectedTournament.tournament_id);
+      loadPlayers(state.authToken, state.selectedTournament.tournament_id);
+    }
   }, [state.selectedTournament]);
 
   useEffect(() => {
@@ -147,9 +141,11 @@ export default function TabContainer() {
     }
   }, [query]);
 
+  const { authToken, selectedTournament } = state;
+  
   return (
     <Box sx={{ width: "100%" }}>
-      {state.selectedTournament && (
+      {authToken && selectedTournament && (
         <Box>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <Tabs
@@ -164,16 +160,28 @@ export default function TabContainer() {
           <TabPanel value={tabIndex} index={0}>
             <PlayersTable
               players={state.players}
-              deletePlayer={removePlayer}
+              deletePlayer={(id) =>
+                removePlayer(id, authToken, selectedTournament.tournament_id)
+              }
               isAdmin={state.isAdmin}
               matchesCreated={state.matches.length > 0}
-              playersEdited={loadPlayers}
+              playersEdited={() =>
+                loadPlayers(authToken, selectedTournament.tournament_id)
+              }
             ></PlayersTable>
           </TabPanel>
           <TabPanel value={tabIndex} index={1}>
             <MatchesTable
               matches={state.matches}
-              scoreAdded={scoreAdded}
+              scoreAdded={(firstScore, secondScore, selectedMatch) =>
+                scoreAdded(
+                  authToken,
+                  selectedTournament.tournament_id,
+                  firstScore,
+                  secondScore,
+                  selectedMatch
+                )
+              }
             ></MatchesTable>
           </TabPanel>
           <TabPanel value={tabIndex} index={2}>
